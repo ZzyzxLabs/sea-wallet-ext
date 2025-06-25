@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  mode: "jit",
-  darkMode: "class",
   content: [
-    "./**/*.tsx",
-    "!./node_modules"
+    "./popup.tsx",
+    "./pages/**/*.{js,ts,jsx,tsx}",
   ],
-  plugins: []
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require('tailwind-scrollbar-hide')
+  ],
 }
+
