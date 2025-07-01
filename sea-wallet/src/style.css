@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#plasmo-shadow-container {
+  all: initial;
+  box-sizing: border-box;
+}
+
+/* Add styles for connection dialog */
+.connection-dialog {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  max-width: 360px;
+  width: 100%;
+}
+
+.dialog-header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.dialog-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.dialog-content {
+  margin-bottom: 20px;
+}
+
+.dialog-content p {
+  margin-bottom: 10px;
+}
+
+.dialog-content ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: background-color 0.2s;
+}
+
+.btn-approve {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-approve:hover {
+  background-color: #2980b9;
+}
+
+.btn-reject {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-reject:hover {
+  background-color: #c0392b;
+}
+
+.accounts-list {
+  margin: 20px 0;
+}
+
+.accounts-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.accounts-list li {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.address {
+  color: #6c757d;
+  font-family: monospace;
+  font-size: 12px;
+  margin-top: 4px;
+}
