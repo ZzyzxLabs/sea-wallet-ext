@@ -13,6 +13,7 @@ import type {
     SuiReportTransactionEffectsMethod,
 } from "@mysten/wallet-standard";
 import { ReadonlyWalletAccount } from '@mysten/wallet-standard';
+import exp from 'constants';
 
 // Interface for wallet accounts
 interface WalletAccount {
@@ -22,7 +23,7 @@ interface WalletAccount {
     active?: boolean; // Optional property to indicate if the account is active
 }
 
-class YourWallet implements Wallet {
+class SeaWallet implements Wallet {
     private someWalletAccounts: WalletAccount[] = [];
     #listeners: { [E in StandardEventsNames]?: StandardEventsListeners[E][] } = {};
     #connected = false;
@@ -159,3 +160,5 @@ class YourWallet implements Wallet {
         );
     }
 }
+
+export default SeaWallet;
