@@ -1,6 +1,28 @@
 import { registerWallet } from "@mysten/wallet-standard";
 import SeaWallet from "~walletStandard";
+export const config = {
+  matches: ["https://*/*", "http://*/*"]
+}
+if (typeof window !== "undefined") {
+  // 可以安全使用 window
+  console.log(window.location.href)
+}
+// Wait for DOM to be ready
+function initializeWallet() {
+  try {
+    const wallet = new SeaWallet();
+    console.log("Sea Wallet: Registering wallet with wallet-standard");
+    console.log("Sea Wallet: ", wallet);
+    registerWallet(wallet);
+    console.log("Sea Wallet: Wallet registered successfully");
+  } catch (error) {
+    console.error("Sea Wallet: Error registering wallet:", error);
+  }
+}
 
-// This script runs in the context of web pages and has access to the window object
-const wallet = new SeaWallet();
-registerWallet(wallet);
+// Ensure window and document are ready
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  initializeWallet();
+} else {
+  document.addEventListener("DOMContentLoaded", initializeWallet);
+}

@@ -13,7 +13,6 @@ import type {
     SuiReportTransactionEffectsMethod,
 } from "@mysten/wallet-standard";
 import { ReadonlyWalletAccount } from '@mysten/wallet-standard';
-import exp from 'constants';
 
 // Interface for wallet accounts
 interface WalletAccount {
@@ -52,7 +51,7 @@ class SeaWallet implements Wallet {
     get chains() {
         return SUI_CHAINS;
     }
-    get features(): ConnectFeature & EventsFeature & SuiFeatures {
+    get features(): StandardConnectFeature & StandardEventsFeature & SuiFeatures {
         return {
             "standard:connect": {
                 version: "1.0.0",
@@ -63,7 +62,7 @@ class SeaWallet implements Wallet {
                 on: this.#on,
             },
             "sui:signPersonalMessage": {
-                version: "1.0.0",
+                version: "1.1.0",
                 signPersonalMessage: this.#signPersonalMessage,
             },
             "sui:signTransaction": {
