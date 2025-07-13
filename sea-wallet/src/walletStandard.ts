@@ -152,8 +152,9 @@ class SeaWallet implements Wallet {
                     // These features must exist on the wallet as well.
                     features: [
                         'sui:signPersonalMessage',
-                        'sui:signTransactionBlock',
+                        'sui:signTransaction',
                         'sui:signAndExecuteTransaction',
+                        'sui:reportTransactionEffects',
                     ],
                 }),
         );
