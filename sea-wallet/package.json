@@ -12,6 +12,7 @@
   "dependencies": {
     "@mysten/sui": "^1.36.0",
     "@mysten/wallet-standard": "^0.16.5",
+    "@plasmohq/storage": "^1.15.0",
     "plasmo": "0.90.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -22,7 +23,10 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
     "prettier": "3.2.4",
+    "tailwindcss": "3",
     "typescript": "5.3.3"
   },
   "manifest": {
@@ -30,20 +34,18 @@
       "https://*/*"
     ],
     "permissions": [
-          "activeTab",
-          "storage",
-          "unlimitedStorage",
-          "tabs",
-          "scripting",
-          "notifications",
-          "webRequest",
-          "clipboardRead",
-          "clipboardWrite"
-        ],
-        "content_security_policy": {
-          "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
-        }
-
+      "activeTab",
+      "storage",
+      "unlimitedStorage",
+      "tabs",
+      "scripting",
+      "notifications",
+      "webRequest",
+      "clipboardRead",
+      "clipboardWrite"
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+    }
   }
-  
 }
