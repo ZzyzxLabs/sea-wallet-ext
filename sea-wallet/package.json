@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@mysten/bcs": "^1.6.4",
     "@mysten/dapp-kit": "^0.16.16",
     "@mysten/sui": "^1.36.0",
     "@mysten/wallet-standard": "^0.16.5",

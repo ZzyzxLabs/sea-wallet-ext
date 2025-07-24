@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519'
 
 // Import from store
-const { addAccount, setActiveAccount, getAllAccounts, deleteAccount } = require("../store/store")
+import { addAccount, setActiveAccount, getAllAccounts, deleteAccount } from "../store/store"
 
 type AccountItemProps = {
   id: string

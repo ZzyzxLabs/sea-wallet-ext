@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
 import Header from "./Header"
 import Dashboard from "./Dashboard"
-import AssetList from "./AssetList"
+import AssetList from "./CoinList"
 import Transaction from "./Transaction"
 import CreateAccount from "./CreateAccount"
 
 // Import wallet store
-const { getActiveAccount, getAllAccounts } = require("../store/store")
+import { getActiveAccount, getAllAccounts } from "../store/store"
 
 type Tab = "dashboard" | "assets" | "transaction" | "accounts"
 
@@ -68,11 +68,16 @@ const WalletApp = () => {
       
       <div className="plasmo-flex-1 plasmo-p-4 plasmo-overflow-y-auto">
         {activeTab === "dashboard" && hasAccount && (
-          <Dashboard address={address} balance={balance} assets={assets} />
+          <Dashboard 
+            address={address} 
+            balance={balance} 
+            assets={assets} 
+            onTabChange={handleTabChange}
+          />
         )}
         
         {activeTab === "assets" && hasAccount && (
-          <AssetList assets={assets} />
+          <AssetList />
         )}
         
         {activeTab === "transaction" && hasAccount && (

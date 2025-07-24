@@ -19,7 +19,7 @@ const storage = new SecureStorage()
 
 // Initialize storage with password and default values
 const initializeStorage = async () => {
-  await storage.setPassword("roosevelt")
+  await storage.setPassword("zzyzx0")
   
   // Initialize wallet state if it doesn't exist
   const walletState = await storage.get("walletState")
@@ -122,11 +122,17 @@ const generateId = (): string => {
 // Initialize storage (can be called when app starts)
 initializeStorage().catch(console.error)
 
-// Export functions using CommonJS syntax for compatibility
-module.exports = {
+// Export all the functions that might be needed by components like CoinList
+export {
   addAccount,
   setActiveAccount,
   getActiveAccount,
   getAllAccounts,
-  deleteAccount
+  deleteAccount,
+  getWalletState,
+  saveWalletState,
+  initializeStorage
 }
+
+// Export types for use in components
+export type { Account, WalletState }
