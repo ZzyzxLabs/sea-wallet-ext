@@ -17,6 +17,7 @@ import type {
     IotaSignAndExecuteTransactionOutput
 } from "@iota/wallet-standard";
 import type { SuiFeatures } from "@mysten/wallet-standard";
+import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum";
 
 export class SeaWallet implements Wallet {
     get version(): "1.0.0" {
@@ -32,7 +33,7 @@ export class SeaWallet implements Wallet {
     }
     // Return the Sui chains that your wallet supports.
     get chains() {
-        return SUPPORTED_CHAINS.concat(SUI_CHAINS);
+        return SUPPORTED_CHAINS.concat(SUI_CHAINS, ETHEREUM_CHAINS);
     }
     get accounts() {
         // Return the accounts that your wallet has

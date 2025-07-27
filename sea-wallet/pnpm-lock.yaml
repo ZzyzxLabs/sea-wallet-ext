@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.83.0(react@18.2.0)
+      '@wallet-standard/ethereum':
+        specifier: ^0.2.0
+        version: 0.2.0
       plasmo:
         specifier: 0.90.5
         version: 0.90.5(@swc/core@1.13.1(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/node@20.11.5)(postcss@8.5.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2044,6 +2047,14 @@ packages:
     resolution: {integrity: sha512-V8Ju1Wvol8i/VDyQOHhjhxmMVwmKiwyxUZBnHhtiPZJTWY0U/Shb2iEWyGngYEbAkp2sGTmEeNX1tVyGR7PqNw==}
     engines: {node: '>=16'}
     hasBin: true
+
+  '@wallet-standard/ethereum-chains@0.2.0':
+    resolution: {integrity: sha512-e7yZbp9YuXd0ocj8Nx4/NMjFmQsRLwLYwp3gWMQfveMVhyoREYB2ekASVHacZmCGCCOvkT6z5pgoM986/osRYg==}
+    engines: {node: '>=16'}
+
+  '@wallet-standard/ethereum@0.2.0':
+    resolution: {integrity: sha512-DNYErWNMgU6RQ1XkexsrhCfiy7sgzbvO0VCpJ82E8xE0vFACavZIy9xjL/xnpUhL0MGYD/r7r0ykvo5MfDKMJw==}
+    engines: {node: '>=16'}
 
   '@wallet-standard/features@1.1.0':
     resolution: {integrity: sha512-hiEivWNztx73s+7iLxsuD1sOJ28xtRix58W7Xnz4XzzA/pF0+aicnWgjOdA10doVDEDZdUuZCIIqG96SFNlDUg==}
@@ -6126,6 +6137,12 @@ snapshots:
     dependencies:
       chalk: 5.4.1
       commander: 13.1.0
+
+  '@wallet-standard/ethereum-chains@0.2.0': {}
+
+  '@wallet-standard/ethereum@0.2.0':
+    dependencies:
+      '@wallet-standard/ethereum-chains': 0.2.0
 
   '@wallet-standard/features@1.1.0':
     dependencies:
