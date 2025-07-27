@@ -1,20 +1,22 @@
-import { type Wallet, SUI_CHAINS,  } from "@mysten/wallet-standard";
+import { type Wallet, SUPPORTED_CHAINS,  } from "@iota/wallet-standard";
+import { SUI_CHAINS } from "@mysten/wallet-standard";
 import {icon} from "./icon"; 
 import type {
     StandardConnectFeature,
     StandardConnectMethod,
     StandardEventsFeature,
     StandardEventsOnMethod,
-    SuiFeatures,
-    SuiSignPersonalMessageMethod,
-    SuiSignTransactionMethod,
-    SuiSignAndExecuteTransactionMethod,
-    SuiReportTransactionEffectsMethod,
+    IotaFeatures,
+    IotaSignPersonalMessageMethod,
+    IotaSignTransactionMethod,
+    IotaSignAndExecuteTransactionMethod,
+    IotaReportTransactionEffectsMethod,
     StandardConnectOutput,
-    SuiSignPersonalMessageOutput,
+    IotaSignPersonalMessageOutput,
     SignedTransaction,
-    SuiSignAndExecuteTransactionOutput
-} from "@mysten/wallet-standard";
+    IotaSignAndExecuteTransactionOutput
+} from "@iota/wallet-standard";
+import type { SuiFeatures } from "@mysten/wallet-standard";
 
 export class SeaWallet implements Wallet {
     get version(): "1.0.0" {
@@ -30,13 +32,13 @@ export class SeaWallet implements Wallet {
     }
     // Return the Sui chains that your wallet supports.
     get chains() {
-        return SUI_CHAINS;
+        return SUPPORTED_CHAINS.concat(SUI_CHAINS);
     }
     get accounts() {
         // Return the accounts that your wallet has
         return [];
     }
-    get features(): StandardConnectFeature & StandardEventsFeature & SuiFeatures {
+    get features(): StandardConnectFeature & StandardEventsFeature & IotaFeatures & SuiFeatures {
         return {
             "standard:connect": {
                 version: "1.0.0",
@@ -45,6 +47,22 @@ export class SeaWallet implements Wallet {
             "standard:events": {
                 version: "1.0.0",
                 on: this.#on,
+            },
+            "iota:signPersonalMessage": {
+                version: "1.0.0",
+                signPersonalMessage: this.#signPersonalMessage,
+            },
+            "iota:signTransaction": {
+                version: "2.0.0",
+                signTransaction: this.#signTransaction,
+            },
+            "iota:signAndExecuteTransaction": {
+                version: "2.0.0",
+                signAndExecuteTransaction: this.#signAndExecuteTransaction,
+            },
+            "iota:reportTransactionEffects": {
+                version: "1.0.0",
+                reportTransactionEffects: this.#reportTransactionEffects,
             },
             "sui:signPersonalMessage": {
                 version: "1.1.0",
@@ -75,22 +93,22 @@ export class SeaWallet implements Wallet {
         return { accounts: [] };
     };
 
-    #signPersonalMessage: SuiSignPersonalMessageMethod = async () => {
+    #signPersonalMessage: IotaSignPersonalMessageMethod = async () => {
         // Your wallet's signPersonalMessage implementation
         throw new Error("Not implemented");
     };
 
-    #signTransaction: SuiSignTransactionMethod = async () => {
+    #signTransaction: IotaSignTransactionMethod = async () => {
         // Your wallet's signTransaction implementation
         throw new Error("Not implemented");
     };
 
-    #signAndExecuteTransaction: SuiSignAndExecuteTransactionMethod = async () => {
+    #signAndExecuteTransaction: IotaSignAndExecuteTransactionMethod = async () => {
         // Your wallet's signAndExecuteTransaction implementation
         throw new Error("Not implemented");
     };
 
-    #reportTransactionEffects: SuiReportTransactionEffectsMethod = async () => {
+    #reportTransactionEffects: IotaReportTransactionEffectsMethod = async () => {
         // Your wallet's reportTransactionEffects implementation
         throw new Error("Not implemented");
     };

@@ -5,7 +5,7 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-import { registerWallet } from "@mysten/wallet-standard"
+import { registerWallet } from "@iota/wallet-standard"
 import {SeaWallet} from "./features/walletStandard";
 
 registerWallet(new SeaWallet());
