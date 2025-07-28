@@ -2,40 +2,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   useSuiClientQueries,
-  useSuiClientQuery,
 } from "@mysten/dapp-kit";
 
+// Import custom hooks
+import { useCoinsQuery } from "../hooks/useCoinsQuery";
 // Import wallet store
 import { getActiveAccount } from "../store/store";
 
 const CoinList = () => {
-  const [account, setAccount] = useState(null);
-
-  // Load the active account when component mounts
-  useEffect(() => {
-    const loadAccount = async () => {
-      try {
-        const activeAccount = await getActiveAccount();
-        setAccount(activeAccount);
-      } catch (error) {
-        console.error("Failed to load active account:", error);
-      }
-    };
-    
-    loadAccount();
-  }, []);
-
-  // Query user's coins
-  const coinsQuery = useSuiClientQuery(
-    "getAllCoins",
-    {
-      owner: account?.publicKey,
-    },
-    {
-      enabled: !!account?.publicKey,
-      staleTime: 30000,
-    }
-  );
+  // Use the custom hook to get coins data
+  const coinsQuery = useCoinsQuery();
+  const { account } = coinsQuery;
 
   // Extract unique coin types from the coins data
   const coinTypes = useMemo(() => {

@@ -7,6 +7,8 @@ import CreateAccount from "./CreateAccount"
 
 // Import wallet store
 import { getActiveAccount, getAllAccounts } from "../store/store"
+// Import custom hook
+import { useCoinsQuery } from "../hooks/useCoinsQuery"
 
 type Tab = "dashboard" | "assets" | "transaction" | "accounts"
 
@@ -16,25 +18,53 @@ const WalletApp = () => {
   const [balance, setBalance] = useState<string>("0.00")
   const [hasAccount, setHasAccount] = useState<boolean>(false)
 
-  // Mock data for assets
-  const assets = [
-    { id: 1, name: "SUI", symbol: "SUI", amount: "1,234.56", value: "$2,469.12", change: "+3.5%" },
-    { id: 2, name: "Ethereum", symbol: "ETH", amount: "1.5", value: "$3,000", change: "-1.2%" },
-    { id: 3, name: "Bitcoin", symbol: "BTC", amount: "0.05", value: "$2,500", change: "+2.1%" },
-    { id: 4, name: "USD Coin", symbol: "USDC", amount: "500", value: "$500", change: "0%" },
-  ]
+  // Use the custom hook to get real coins data
+  const coinsQuery = useCoinsQuery()
+
+  // Process coins data for assets display
+  const assets = coinsQuery.data?.data?.map((coin, index) => ({
+    id: index + 1,
+    name: coin.coinType.split("::").pop() || "Unknown Coin",
+    symbol: coin.coinType.split("::").pop()?.toUpperCase() || "UNK",
+    amount: (parseInt(coin.balance) / Math.pow(10, 9)).toLocaleString(undefined, {
+      maximumFractionDigits: 6,
+      minimumFractionDigits: 2,
+    }),
+    value: `$${(parseInt(coin.balance) / Math.pow(10, 9) * 1.5).toFixed(2)}`, // Mock USD value
+    change: "+0.0%", // Mock change percentage
+    coinType: coin.coinType,
+    balance: coin.balance
+  })) || []
 
   // Load the active account when component mounts
   useEffect(() => {
     loadActiveAccount()
   }, [])
 
+  // Update balance when coins data changes
+  useEffect(() => {
+    if (coinsQuery.data?.data) {
+      // Calculate total balance from SUI coins
+      const suiCoins = coinsQuery.data.data.filter(coin => 
+        coin.coinType === "0x2::sui::SUI"
+      )
+      const totalSuiBalance = suiCoins.reduce((total, coin) => 
+        total + parseInt(coin.balance), 0
+      )
+      const formattedBalance = (totalSuiBalance / Math.pow(10, 9)).toLocaleString(undefined, {
+        maximumFractionDigits: 6,
+        minimumFractionDigits: 2,
+      })
+      setBalance(formattedBalance)
+    }
+  }, [coinsQuery.data])
+
   // Load the active account from store
   const loadActiveAccount = async () => {
     try {
       const activeAccount = await getActiveAccount()
       if (activeAccount) {
-        setAddress(activeAccount.publicKey)
+        setAddress(activeAccount.publicKey.toSuiAddress())
         setHasAccount(true)
       } else {
         // Check if we have any accounts

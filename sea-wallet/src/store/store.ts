@@ -122,7 +122,6 @@ const generateId = (): string => {
 // Initialize storage (can be called when app starts)
 initializeStorage().catch(console.error)
 
-// Export all the functions that might be needed by components like CoinList
 export {
   addAccount,
   setActiveAccount,

@@ -22,6 +22,7 @@ const Transaction = ({ address, assets }: TransactionProps) => {
   const [selectedAsset, setSelectedAsset] = useState<number | null>(assets[0]?.id || null)
   const [transactionStatus, setTransactionStatus] = useState<null | "pending" | "success" | "error">(null)
   const curAccount = getActiveAccount(); //this function retrieves the active account
+  const client = useSuiClient() // Move this to the top level
   // Function to handle transaction submission
   const handleTransaction = (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +38,6 @@ const Transaction = ({ address, assets }: TransactionProps) => {
     // Simulate network delay
     setTimeout(async () => {
       // In a real app, you'd have logic to check for errors
-      const client = useSuiClient()
       const tx = coinTx(recipient,(1),[], false); // Adjust coin selection logic as needed
       const result = await client.signAndExecuteTransaction({ signer: (await curAccount)?.keypair, transaction: tx });
       await client.waitForTransaction({ digest: result.digest });
