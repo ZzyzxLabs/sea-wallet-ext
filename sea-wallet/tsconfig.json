@@ -9,9 +9,13 @@
     "./**/*.tsx"
   ],
   "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "paths": {
       "~*": [
-        "./*"
+        "./src/*"
       ]
     },
     "baseUrl": "."
