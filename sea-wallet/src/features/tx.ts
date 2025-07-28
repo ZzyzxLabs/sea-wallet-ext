@@ -3,7 +3,7 @@ import { fromHex, toHex } from "@mysten/bcs";
 import { bcs } from "@mysten/sui/bcs";
 import { coinWithBalance } from "@mysten/sui/transactions";
 
-const coinTx = (destination: string, amount: number, coins: string[], sui?: boolean) => {
+export const coinTx = (destination: string, amount: number, coins: string[], sui?: boolean) => {
   const tx = new Transaction();
   
   if (coins.length === 0) {

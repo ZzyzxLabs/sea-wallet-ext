@@ -86,17 +86,16 @@ const CreateAccount = ({ onAccountChange }: CreateAccountProps) => {
       
       // Generate new keypair
       const keypair = new Ed25519Keypair()
-      const publicKey = keypair.getPublicKey().toSuiAddress()
+      const publicKey = keypair.getPublicKey()
       
       // Store the serialized keypair
       // Use the built-in JSON representation for the keypair
-      const keypairData = JSON.stringify(keypair)
       
       // Save to secure storage
       await addAccount({
         name: accountName.trim(),
         publicKey,
-        keypair: keypairData
+        keypair: keypair
       })
       
       // Reset form

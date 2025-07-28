@@ -1,11 +1,11 @@
 import { SecureStorage } from "@plasmohq/storage/secure"
-
+import type { Ed25519PublicKey, Ed25519Keypair } from "@mysten/sui/dist/cjs/keypairs/ed25519"
 // Types for our wallet accounts
 type Account = {
   id: string
   name: string
-  publicKey: string
-  keypair: string // Serialized keypair object
+  publicKey: Ed25519PublicKey
+  keypair: Ed25519Keypair // Use the Ed25519Keypair type
   isActive: boolean
   createdAt: number
 }

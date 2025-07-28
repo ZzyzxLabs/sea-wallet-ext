@@ -1,5 +1,7 @@
 import { useState } from "react"
-
+import { useSuiClient } from "@mysten/dapp-kit"
+import { coinTx } from "../features/tx"; // Adjust the import path as necessary
+import { getActiveAccount} from "../store/store"; // Adjust the import path as necessary
 type Asset = {
   id: number
   name: string
@@ -19,7 +21,7 @@ const Transaction = ({ address, assets }: TransactionProps) => {
   const [amount, setAmount] = useState("")
   const [selectedAsset, setSelectedAsset] = useState<number | null>(assets[0]?.id || null)
   const [transactionStatus, setTransactionStatus] = useState<null | "pending" | "success" | "error">(null)
-
+  const curAccount = getActiveAccount(); //this function retrieves the active account
   // Function to handle transaction submission
   const handleTransaction = (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,10 +35,13 @@ const Transaction = ({ address, assets }: TransactionProps) => {
     setTransactionStatus("pending")
     
     // Simulate network delay
-    setTimeout(() => {
+    setTimeout(async () => {
       // In a real app, you'd have logic to check for errors
-      const success = Math.random() > 0.2 // 80% chance of success for demo
-      
+      const client = useSuiClient()
+      const tx = coinTx(recipient,(1),[], false); // Adjust coin selection logic as needed
+      const result = await client.signAndExecuteTransaction({ signer: (await curAccount)?.keypair, transaction: tx });
+      await client.waitForTransaction({ digest: result.digest });
+      const success = true
       if (success) {
         setTransactionStatus("success")
         // Clear form on success
