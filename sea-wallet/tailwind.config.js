@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{tsx,html}"],
+  content: ["./popView/**/*.{ts,tsx}", "./src/**/*.{tsx,html}"],
   darkMode: "media",
   prefix: "plasmo-"
 }
