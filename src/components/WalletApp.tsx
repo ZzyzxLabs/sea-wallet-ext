@@ -6,7 +6,7 @@ import Transaction from "./Transaction"
 import CreateAccount from "./CreateAccount"
 
 // Import wallet store
-import { getActiveAccount, getAllAccounts } from "../store/store"
+import { getActiveAccount, getAllAccounts, setActiveAccount } from "../store/store"
 // Import custom hook
 import { useCoinsQuery } from "../hooks/useCoinsQuery"
 
@@ -63,14 +63,32 @@ const WalletApp = () => {
   const loadActiveAccount = async () => {
     try {
       const activeAccount = await getActiveAccount()
+      console.log("Active account:", activeAccount)
       if (activeAccount) {
-        setAddress(activeAccount.publicKey.toSuiAddress())
-        setHasAccount(true)
+        // Use the stored address directly since keypair methods are lost during serialization
+        if (activeAccount.address) {
+          setAddress(activeAccount.address)
+          setHasAccount(true)
+        } else {
+          console.error("Active account has no address")
+          setHasAccount(false)
+        }
       } else {
         // Check if we have any accounts
         const accounts = await getAllAccounts()
         if (accounts && accounts.length > 0) {
-          setHasAccount(true)
+          // Auto-activate the first account if no active account is set
+          const firstAccount = accounts[0]
+          await setActiveAccount(firstAccount.id)
+          // Use the stored address directly
+          if (firstAccount.address) {
+            setAddress(firstAccount.address)
+            setHasAccount(true)
+            console.log("Auto-activated first account:", firstAccount.name)
+          } else {
+            console.error("First account has no address")
+            setHasAccount(false)
+          }
         } else {
           // No accounts yet, show the accounts tab by default
           setActiveTab("accounts")
@@ -79,6 +97,7 @@ const WalletApp = () => {
       }
     } catch (error) {
       console.error("Failed to load active account:", error)
+      setHasAccount(false)
     }
   }
 

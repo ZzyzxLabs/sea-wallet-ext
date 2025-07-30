@@ -4,8 +4,8 @@ import type { Ed25519PublicKey, Ed25519Keypair } from "@mysten/sui/dist/cjs/keyp
 type Account = {
   id: string
   name: string
-  publicKey: Ed25519PublicKey
   keypair: Ed25519Keypair // Use the Ed25519Keypair type
+  address: string // Sui address derived from the public key
   isActive: boolean
   createdAt: number
 }
@@ -43,14 +43,16 @@ const saveWalletState = async (state: WalletState): Promise<void> => {
 }
 
 // Add a new account
-const addAccount = async (account: Omit<Account, "id" | "createdAt" | "isActive">): Promise<Account> => {
+const addAccount = async (keypair: Ed25519Keypair, name: string): Promise<Account> => {
   const walletState = await getWalletState()
   
   const newAccount: Account = {
-    ...account,
+    keypair,
+    name,
     id: generateId(),
     createdAt: Date.now(),
-    isActive: walletState.accounts.length === 0 // First account is active by default
+    isActive: walletState.accounts.length === 0, // First account is active by default
+    address: keypair.getPublicKey().toSuiAddress()
   }
   
   const updatedState = {

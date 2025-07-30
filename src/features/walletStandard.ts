@@ -1,4 +1,4 @@
-import { type Wallet, SUPPORTED_CHAINS,  } from "@iota/wallet-standard";
+import { type Wallet, SUPPORTED_CHAINS, ReadonlyWalletAccount  } from "@iota/wallet-standard";
 import { SUI_CHAINS } from "@mysten/wallet-standard";
 import {icon} from "./icon"; 
 import type {
@@ -18,6 +18,7 @@ import type {
 } from "@iota/wallet-standard";
 import type { SuiFeatures } from "@mysten/wallet-standard";
 import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum";
+import { getAllAccounts } from "~store/store";
 
 export class SeaWallet implements Wallet {
     get version(): "1.0.0" {
@@ -35,9 +36,36 @@ export class SeaWallet implements Wallet {
     get chains() {
         return SUPPORTED_CHAINS.concat(SUI_CHAINS, ETHEREUM_CHAINS);
     }
+    private walletAccounts: ReadonlyWalletAccount[] = [];
+
+    constructor() {
+        // Initialize accounts
+        this.refreshAccounts();
+    }
+
+    private async refreshAccounts() {
+        const accounts = await getAllAccounts();
+        this.walletAccounts = accounts.map(
+            (walletAccount) =>
+                new ReadonlyWalletAccount({
+                    address: walletAccount.address,
+                    publicKey: walletAccount.keypair.getPublicKey().toString(),
+                    // The Sui chains that your wallet supports.
+                    chains: SUI_CHAINS,
+                    // The features that this account supports. This can be a subset of the wallet's supported features.
+                    // These features must exist on the wallet as well.
+                    features: [
+                        'sui:signPersonalMessage',
+                        'sui:signTransaction',
+                        'sui:signAndExecuteTransaction',
+                    ],
+                }),
+        );
+    }
+
     get accounts() {
-        // Return the accounts that your wallet has
-        return [];
+        // Return the cached accounts that your wallet has
+        return this.walletAccounts;
     }
     get features(): StandardConnectFeature & StandardEventsFeature & IotaFeatures & SuiFeatures {
         return {
