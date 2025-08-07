@@ -21,6 +21,11 @@ import { getAllAccounts } from "~store/store"
 
 import { icon } from "./icon"
 
+import { sendToBackground } from "@plasmohq/messaging"
+
+import type { ConnectRequest, ConnectResponse } from "~background/messages/connect"
+
+
 export class SeaWallet implements Wallet {
   get version(): "1.0.0" {
     // Return the version of the Wallet Standard this implements (in this case, 1.0.0).
@@ -105,7 +110,24 @@ export class SeaWallet implements Wallet {
 
   #connect: StandardConnectMethod = async () => {
     // Your wallet's connect implementation
-    return { accounts: [] }
+    try {
+      console.log(chrome.runtime.id)
+      const response = await sendToBackground<ConnectRequest, ConnectResponse>({
+        name: "connect",
+        body: {
+          site: window.location.origin,
+          icon: (document.querySelector('link[rel="icon"]') as HTMLLinkElement)?.href || 
+               (document.querySelector('link[rel="shortcut icon"]') as HTMLLinkElement)?.href || 
+               `${window.location.origin}/favicon.ico`
+        },
+        // Replace this with your actual extension ID from chrome://extensions
+        extensionId: 'anaeleemhdicpgmclmdijcmadhmeipfp'
+      })
+      return { accounts: [] }
+    } catch (error) {
+      console.error("Connection error:", error)
+      return { accounts: [] }
+    }
   }
 
   #signPersonalMessage: SuiSignPersonalMessageMethod = async () => {

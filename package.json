@@ -37,7 +37,8 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "http://*/*"
     ],
     "permissions": [
       "activeTab",
@@ -48,10 +49,17 @@
       "notifications",
       "webRequest",
       "clipboardRead",
-      "clipboardWrite"
+      "clipboardWrite",
+      "windows"
     ],
     "content_security_policy": {
       "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
-    }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["popup.html", "event/*"],
+        "matches": ["<all_urls>"]
+      }
+    ]
   }
 }

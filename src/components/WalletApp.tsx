@@ -9,6 +9,9 @@ import CreateAccount from "./CreateAccount"
 import { getActiveAccount, getAllAccounts, setActiveAccount } from "../store/store"
 // Import custom hook
 import { useCoinsQuery } from "../hooks/useCoinsQuery"
+// Import sendToBackground for communication with background script
+import { sendToBackground } from "@plasmohq/messaging"
+import type { ConnectRequest, ConnectResponse } from "~background/messages/connect"
 
 type Tab = "dashboard" | "assets" | "transaction" | "accounts"
 
@@ -106,6 +109,29 @@ const WalletApp = () => {
     setActiveTab(tab)
   }
 
+  // Function to test background connection
+  const testBackgroundConnection = async () => {
+    try {
+      console.log("Testing background connection")
+      const extensionId = chrome.runtime.id
+      console.log("Extension ID:", extensionId)
+      
+      const response = await sendToBackground<ConnectRequest, ConnectResponse>({
+        name: "connect",
+        body: {
+          site: window.location.origin,
+          icon: `${window.location.origin}/favicon.ico`
+        }
+      });
+      
+      console.log("Response from background:", response);
+      alert(`Background connection test result: ${response.success ? 'Success' : 'Failed'}\nMessage: ${response.message}`);
+    } catch (error) {
+      console.error("Error connecting to background:", error);
+      alert(`Background connection error: ${error.message}`);
+    }
+  }
+
   return (
     <div className="plasmo-flex plasmo-flex-col plasmo-h-[600px] plasmo-w-[400px] plasmo-bg-gray-50">
       <Header 
@@ -136,6 +162,16 @@ const WalletApp = () => {
         {activeTab === "accounts" && (
           <CreateAccount onAccountChange={loadActiveAccount} />
         )}
+        
+        {/* Test background connection button */}
+        <div className="plasmo-mt-4 plasmo-text-center">
+          <button 
+            onClick={testBackgroundConnection}
+            className="plasmo-bg-green-500 plasmo-text-white plasmo-py-2 plasmo-px-4 plasmo-rounded plasmo-shadow-md hover:plasmo-bg-green-600 plasmo-transition-colors"
+          >
+            Test Background Connection
+          </button>
+        </div>
         
         {!hasAccount && activeTab !== "accounts" && (
           <div className="plasmo-text-center plasmo-p-8">
