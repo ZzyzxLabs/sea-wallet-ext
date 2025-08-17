@@ -1,39 +1,36 @@
-
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
-/.pnp
-.pnp.js
 
-# testing
-/coverage
+# Build files
+/dist
+/build
 
-#cache
-.turbo
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Log files
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# local env files
-.env*
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-out/
-build/
-dist/
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# plasmo - https://www.plasmo.com
-.plasmo
+# Operating system files
+.DS_Store
+Thumbs.db
 
-# bpp - http://bpp.browser.market/
-keys.json
-
-# typescript
-.tsbuildinfo
+# Test coverage
+/coverage

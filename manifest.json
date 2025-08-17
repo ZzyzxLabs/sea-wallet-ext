@@ -1,0 +1,22 @@
+{
+  "name": "Sea Wallet",
+  "description": "Sea the wallet",
+  "version": "0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "hello_extensions.png"
+  },
+  "permissions": [
+      "activeTab",
+      "storage",
+      "unlimitedStorage",
+      "tabs",
+      "scripting",
+      "notifications",
+      "webRequest",
+      "clipboardRead",
+      "clipboardWrite",
+      "windows"
+    ]
+}

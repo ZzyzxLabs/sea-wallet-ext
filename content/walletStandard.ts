@@ -1,10 +1,7 @@
+
+import { SUI_CHAINS, Wallet } from "@mysten/wallet-standard"
 import {
-  ReadonlyWalletAccount,
-  SUPPORTED_CHAINS,
-  type Wallet
-} from "@iota/wallet-standard"
-import { SUI_CHAINS } from "@mysten/wallet-standard"
-import type {
+    ReadonlyWalletAccount,
   StandardConnectFeature,
   StandardConnectMethod,
   StandardEventsFeature,
@@ -15,15 +12,11 @@ import type {
   SuiSignPersonalMessageMethod,
   SuiSignTransactionMethod
 } from "@mysten/wallet-standard"
-import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum"
 
-import { getAllAccounts } from "~store/store"
 
-import { icon } from "./icon"
+import { icon } from "../assets/icon"
 
-import { sendToBackground } from "@plasmohq/messaging"
 
-import type { ConnectRequest, ConnectResponse } from "~background/messages/connect"
 
 
 export class SeaWallet implements Wallet {
@@ -40,7 +33,7 @@ export class SeaWallet implements Wallet {
   }
   // Return the Sui chains that your wallet supports.
   get chains() {
-    return SUPPORTED_CHAINS.concat(SUI_CHAINS, ETHEREUM_CHAINS)
+    return SUI_CHAINS
   }
   private walletAccounts: ReadonlyWalletAccount[] = []
 
@@ -50,7 +43,7 @@ export class SeaWallet implements Wallet {
   }
 
   private async refreshAccounts() {
-    const accounts = await getAllAccounts()
+    const accounts = []
     this.walletAccounts = accounts.map(
       (walletAccount) =>
         new ReadonlyWalletAccount({
@@ -111,18 +104,6 @@ export class SeaWallet implements Wallet {
   #connect: StandardConnectMethod = async () => {
     // Your wallet's connect implementation
     try {
-      console.log(chrome.runtime.id)
-      const response = await sendToBackground<ConnectRequest, ConnectResponse>({
-        name: "connect",
-        body: {
-          site: window.location.origin,
-          icon: (document.querySelector('link[rel="icon"]') as HTMLLinkElement)?.href || 
-               (document.querySelector('link[rel="shortcut icon"]') as HTMLLinkElement)?.href || 
-               `${window.location.origin}/favicon.ico`
-        },
-        // Replace this with your actual extension ID from chrome://extensions
-        extensionId: 'anaeleemhdicpgmclmdijcmadhmeipfp'
-      })
       return { accounts: [] }
     } catch (error) {
       console.error("Connection error:", error)
