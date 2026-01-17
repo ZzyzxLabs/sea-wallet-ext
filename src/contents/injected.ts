@@ -17,9 +17,9 @@ console.log("Hello Main World")
 // Wrap async code in an async function and execute it immediately
 async function connectToBackground() {
   let res
-  console.log("Getting extension ID")
-  const extensionId = chrome.runtime.id
-  console.log("Extension ID:", extensionId)
+  console.log("Connecting to background...")
+  // const extensionId = chrome.runtime.id
+  // console.log("Extension ID:", extensionId)
   res = await sendToBackground({
     name: "connect",
     body: {

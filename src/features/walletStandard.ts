@@ -1,13 +1,13 @@
 import {
   type StandardConnectFeature,
   ReadonlyWalletAccount,
-  SUPPORTED_CHAINS as IOTA_CHAINS,
-  type Wallet,
+  SUPPORTED_CHAINS,
   type IotaFeatures,
-  type IotaSignTransactionMethod,
+  type IotaReportTransactionEffectsMethod,
   type IotaSignAndExecuteTransactionMethod,
   type IotaSignPersonalMessageMethod,
-  type IotaReportTransactionEffectsMethod
+  type IotaSignTransactionMethod,
+  type Wallet
 } from "@iota/wallet-standard"
 import { SUI_CHAINS } from "@mysten/wallet-standard"
 import type {
@@ -20,39 +20,29 @@ import type {
   SuiSignPersonalMessageMethod,
   SuiSignTransactionMethod
 } from "@mysten/wallet-standard"
-import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum"
-import type {
-  RialoFeatures,
-  RialoSignTransactionMethod,
-  RialoSignMessageMethod
+import {
+  type RialoFeatures,
+  type RialoSignAndSendAllTransactionsMethod,
+  type RialoSignAndSendTransactionMethod,
+  type RialoSignMessageMethod,
+  type RialoSignTransactionMethod
 } from "@rialo/wallet-standard"
+import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum"
 
+import { sendToBackground } from "@plasmohq/messaging"
+
+import type {
+  ConnectRequest,
+  ConnectResponse
+} from "~background/messages/connect"
 import { getAllAccounts } from "~store/store"
 
 import { icon } from "./icon"
 
-import { sendToBackground } from "@plasmohq/messaging"
-
-import type { ConnectRequest, ConnectResponse } from "~background/messages/connect"
-
-export const RIALO_CHAINS = [
-  "rialo:mainnet",
-  "rialo:testnet",
-  "rialo:devnet",
-  "rialo:localnet"
-] as const
-
-type ExtendedWalletRequest = ConnectRequest & {
-  extensionId?: string
-}
-
 export class SeaWallet implements Wallet {
-  get version(): "1.0.0" {
-    return "1.0.0"
-  }
-  get name() {
-    return "Sea Wallet"
-  }
+  readonly version = "1.0.0" as const
+  readonly name = "Sea Wallet"
+
   get icon(): `data:image/png;base64,${string}` {
     return icon
   }
@@ -99,8 +89,11 @@ export class SeaWallet implements Wallet {
   get accounts() {
     return this.walletAccounts
   }
-
-  get features(): StandardConnectFeature & StandardEventsFeature & SuiFeatures & IotaFeatures & RialoFeatures {
+  get features(): StandardConnectFeature &
+    StandardEventsFeature &
+    SuiFeatures &
+    IotaFeatures &
+    RialoFeatures {
     return {
       "standard:connect": {
         version: "1.0.0",
@@ -127,31 +120,37 @@ export class SeaWallet implements Wallet {
         version: "1.0.0",
         reportTransactionEffects: this.#reportTransactionEffects
       },
-      // IOTA Features
       "iota:signPersonalMessage": {
         version: "1.0.0",
-        signPersonalMessage: this.#signIotaPersonalMessage
+        signPersonalMessage: this.#iotaSignPersonalMessage
       },
       "iota:signTransaction": {
         version: "2.0.0",
-        signTransaction: this.#signIotaTransaction
+        signTransaction: this.#iotaSignTransaction
       },
       "iota:signAndExecuteTransaction": {
         version: "2.0.0",
-        signAndExecuteTransaction: this.#signAndExecuteIotaTransaction
+        signAndExecuteTransaction: this.#iotaSignAndExecuteTransaction
       },
       "iota:reportTransactionEffects": {
         version: "1.0.0",
-        reportTransactionEffects: this.#reportIotaTransactionEffects
+        reportTransactionEffects: this.#iotaReportTransactionEffects
       },
-      // Rialo Features
+      "rialo:signAndSendTransaction": {
+        version: "1.0.0",
+        signAndSendTransaction: this.#rialoSignAndSendTransaction
+      },
       "rialo:signMessage": {
         version: "1.0.0",
-        signMessage: this.#signRialoMessage
+        signMessage: this.#rialoSignMessage
+      },
+      "rialo:signAndSendAllTransactions": {
+        version: "1.0.0",
+        signAndSendAllTransactions: this.#rialoSignAndSendAllTransactions
       },
       "rialo:signTransaction": {
         version: "1.0.0",
-        signTransaction: this.#signRialoTransaction
+        signTransaction: this.#rialoSignTransaction
       }
     }
   }
@@ -162,15 +161,23 @@ export class SeaWallet implements Wallet {
 
   #connect: StandardConnectMethod = async () => {
     try {
-      const response = await sendToBackground<ExtendedWalletRequest, ConnectResponse>({
+      // console.log(chrome.runtime.id)
+      const response = await sendToBackground<ConnectRequest, ConnectResponse>({
         name: "connect",
         body: {
           site: window.location.origin,
-          icon: (document.querySelector('link[rel="icon"]') as HTMLLinkElement)?.href ||
-            (document.querySelector('link[rel="shortcut icon"]') as HTMLLinkElement)?.href ||
+          icon:
+            (document.querySelector('link[rel="icon"]') as HTMLLinkElement)
+              ?.href ||
+            (
+              document.querySelector(
+                'link[rel="shortcut icon"]'
+              ) as HTMLLinkElement
+            )?.href ||
             `${window.location.origin}/favicon.ico`
         },
-        extensionId: chrome.runtime.id
+        // Replace this with your actual extension ID from chrome://extensions
+        extensionId: "anaeleemhdicpgmclmdijcmadhmeipfp"
       })
       // Refresh accounts after successful connection to ensure state is synced
       await this.refreshAccounts()
@@ -220,8 +227,44 @@ export class SeaWallet implements Wallet {
     throw new Error("Rialo Sign Message Not implemented")
   }
 
-  #signRialoTransaction: RialoSignTransactionMethod = async (input) => {
-    throw new Error("Rialo Sign Transaction Not implemented")
+  #iotaSignPersonalMessage: IotaSignPersonalMessageMethod = async () => {
+    // Your wallet's iota signPersonalMessage implementation
+    throw new Error("Not implemented")
+  }
+
+  #iotaSignTransaction: IotaSignTransactionMethod = async () => {
+    // Your wallet's iota signTransaction implementation
+    throw new Error("Not implemented")
+  }
+
+  #iotaSignAndExecuteTransaction: IotaSignAndExecuteTransactionMethod =
+    async () => {
+      // Your wallet's iota signAndExecuteTransaction implementation
+      throw new Error("Not implemented")
+    }
+
+  #iotaReportTransactionEffects: IotaReportTransactionEffectsMethod =
+    async () => {
+      // Your wallet's iota reportTransactionEffects implementation
+      throw new Error("Not implemented")
+    }
+
+  #rialoSignAndSendAllTransactions: RialoSignAndSendAllTransactionsMethod =
+    async (inputs) => {
+      throw new Error("Not implemented")
+    }
+
+  #rialoSignAndSendTransaction: RialoSignAndSendTransactionMethod = async (
+    ...inputs
+  ) => {
+    throw new Error("Not implemented")
+  }
+
+  #rialoSignMessage: RialoSignMessageMethod = async (...inputs) => {
+    throw new Error("Not implemented")
+  }
+
+  #rialoSignTransaction: RialoSignTransactionMethod = async (...inputs) => {
+    throw new Error("Not implemented")
   }
 }
-
