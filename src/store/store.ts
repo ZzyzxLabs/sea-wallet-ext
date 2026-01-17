@@ -1,5 +1,6 @@
 import { SecureStorage } from "@plasmohq/storage/secure"
 import type { Ed25519PublicKey, Ed25519Keypair } from "@mysten/sui/dist/cjs/keypairs/ed25519"
+
 // Types for our wallet accounts
 type Account = {
   id: string
@@ -20,7 +21,7 @@ const storage = new SecureStorage()
 // Initialize storage with password and default values
 const initializeStorage = async () => {
   await storage.setPassword("zzyzx0")
-  
+
   // Initialize wallet state if it doesn't exist
   const walletState = await storage.get("walletState")
   if (!walletState) {
@@ -45,7 +46,7 @@ const saveWalletState = async (state: WalletState): Promise<void> => {
 // Add a new account
 const addAccount = async (keypair: Ed25519Keypair, name: string): Promise<Account> => {
   const walletState = await getWalletState()
-  
+
   const newAccount: Account = {
     keypair,
     name,
@@ -54,12 +55,12 @@ const addAccount = async (keypair: Ed25519Keypair, name: string): Promise<Accoun
     isActive: walletState.accounts.length === 0, // First account is active by default
     address: keypair.getPublicKey().toSuiAddress()
   }
-  
+
   const updatedState = {
     accounts: [...walletState.accounts, newAccount],
     activeAccountId: walletState.activeAccountId || (walletState.accounts.length === 0 ? newAccount.id : null)
   }
-  
+
   await saveWalletState(updatedState)
   return newAccount
 }
@@ -67,12 +68,12 @@ const addAccount = async (keypair: Ed25519Keypair, name: string): Promise<Accoun
 // Set active account
 const setActiveAccount = async (accountId: string): Promise<void> => {
   const walletState = await getWalletState()
-  
+
   const updatedAccounts = walletState.accounts.map(account => ({
     ...account,
     isActive: account.id === accountId
   }))
-  
+
   await saveWalletState({
     accounts: updatedAccounts,
     activeAccountId: accountId
@@ -83,7 +84,7 @@ const setActiveAccount = async (accountId: string): Promise<void> => {
 const getActiveAccount = async (): Promise<Account | null> => {
   const walletState = await getWalletState()
   if (!walletState.activeAccountId) return null
-  
+
   return walletState.accounts.find(account => account.id === walletState.activeAccountId) || null
 }
 
@@ -96,10 +97,10 @@ const getAllAccounts = async (): Promise<Account[]> => {
 // Delete account
 const deleteAccount = async (accountId: string): Promise<void> => {
   const walletState = await getWalletState()
-  
+
   const updatedAccounts = walletState.accounts.filter(account => account.id !== accountId)
   let activeAccountId = walletState.activeAccountId
-  
+
   // If we're deleting the active account, set the first available one as active
   if (accountId === walletState.activeAccountId) {
     activeAccountId = updatedAccounts.length > 0 ? updatedAccounts[0].id : null
@@ -108,7 +109,7 @@ const deleteAccount = async (accountId: string): Promise<void> => {
       updatedAccounts[0].isActive = true
     }
   }
-  
+
   await saveWalletState({
     accounts: updatedAccounts,
     activeAccountId
@@ -117,8 +118,8 @@ const deleteAccount = async (accountId: string): Promise<void> => {
 
 // Helper function to generate a unique ID
 const generateId = (): string => {
-  return Math.random().toString(36).substring(2, 15) + 
-         Math.random().toString(36).substring(2, 15)
+  return Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
 }
 
 // Initialize storage (can be called when app starts)

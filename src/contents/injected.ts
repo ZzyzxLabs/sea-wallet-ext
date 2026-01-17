@@ -1,4 +1,5 @@
-import { registerWallet } from "@mysten/wallet-standard"
+// import { registerWallet } from "@mysten/wallet-standard"
+import { registerWallet } from "@iota/wallet-standard"
 import type { PlasmoCSConfig } from "plasmo"
 
 import { sendToBackground } from "@plasmohq/messaging"
