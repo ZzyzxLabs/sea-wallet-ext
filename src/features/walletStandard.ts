@@ -1,7 +1,7 @@
 import {
   type StandardConnectFeature,
   ReadonlyWalletAccount,
-  SUPPORTED_CHAINS,
+  SUPPORTED_CHAINS as IOTA_CHAINS,
   type IotaFeatures,
   type IotaReportTransactionEffectsMethod,
   type IotaSignAndExecuteTransactionMethod,
@@ -38,6 +38,13 @@ import type {
 import { getAllAccounts } from "~store/store"
 
 import { icon } from "./icon"
+
+export const RIALO_CHAINS = [
+  "rialo:mainnet",
+  "rialo:testnet",
+  "rialo:devnet",
+  "rialo:localnet"
+] as const;
 
 export class SeaWallet implements Wallet {
   readonly version = "1.0.0" as const
