@@ -1,6 +1,11 @@
 import {
   ReadonlyWalletAccount,
   SUPPORTED_CHAINS,
+  type IotaFeatures,
+  type IotaReportTransactionEffectsMethod,
+  type IotaSignAndExecuteTransactionMethod,
+  type IotaSignPersonalMessageMethod,
+  type IotaSignTransactionMethod,
   type Wallet
 } from "@iota/wallet-standard"
 import { SUI_CHAINS } from "@mysten/wallet-standard"
@@ -15,25 +20,29 @@ import type {
   SuiSignPersonalMessageMethod,
   SuiSignTransactionMethod
 } from "@mysten/wallet-standard"
+import {
+  type RialoFeatures,
+  type RialoSignAndSendAllTransactionsMethod,
+  type RialoSignAndSendTransactionMethod,
+  type RialoSignMessageMethod,
+  type RialoSignTransactionMethod
+} from "@rialo/wallet-standard"
 import { ETHEREUM_CHAINS } from "@wallet-standard/ethereum"
 
+import { sendToBackground } from "@plasmohq/messaging"
+
+import type {
+  ConnectRequest,
+  ConnectResponse
+} from "~background/messages/connect"
 import { getAllAccounts } from "~store/store"
 
 import { icon } from "./icon"
 
-import { sendToBackground } from "@plasmohq/messaging"
-
-import type { ConnectRequest, ConnectResponse } from "~background/messages/connect"
-
-
 export class SeaWallet implements Wallet {
-  get version(): "1.0.0" {
-    // Return the version of the Wallet Standard this implements (in this case, 1.0.0).
-    return "1.0.0"
-  }
-  get name() {
-    return "Sea Wallet "
-  }
+  readonly version = "1.0.0" as const
+  readonly name = "Sea Wallet"
+
   get icon(): `data:image/png;base64,${string}` {
     // A simple wallet icon in SVG format, base64 encoded
     return icon
@@ -73,7 +82,11 @@ export class SeaWallet implements Wallet {
     // Return the cached accounts that your wallet has
     return this.walletAccounts
   }
-  get features(): StandardConnectFeature & StandardEventsFeature & SuiFeatures {
+  get features(): StandardConnectFeature &
+    StandardEventsFeature &
+    SuiFeatures &
+    IotaFeatures &
+    RialoFeatures {
     return {
       "standard:connect": {
         version: "1.0.0",
@@ -99,6 +112,38 @@ export class SeaWallet implements Wallet {
       "sui:reportTransactionEffects": {
         version: "1.0.0",
         reportTransactionEffects: this.#reportTransactionEffects
+      },
+      "iota:signPersonalMessage": {
+        version: "1.0.0",
+        signPersonalMessage: this.#iotaSignPersonalMessage
+      },
+      "iota:signTransaction": {
+        version: "2.0.0",
+        signTransaction: this.#iotaSignTransaction
+      },
+      "iota:signAndExecuteTransaction": {
+        version: "2.0.0",
+        signAndExecuteTransaction: this.#iotaSignAndExecuteTransaction
+      },
+      "iota:reportTransactionEffects": {
+        version: "1.0.0",
+        reportTransactionEffects: this.#iotaReportTransactionEffects
+      },
+      "rialo:signAndSendTransaction": {
+        version: "1.0.0",
+        signAndSendTransaction: this.#rialoSignAndSendTransaction
+      },
+      "rialo:signMessage": {
+        version: "1.0.0",
+        signMessage: this.#rialoSignMessage
+      },
+      "rialo:signAndSendAllTransactions": {
+        version: "1.0.0",
+        signAndSendAllTransactions: this.#rialoSignAndSendAllTransactions
+      },
+      "rialo:signTransaction": {
+        version: "1.0.0",
+        signTransaction: this.#rialoSignTransaction
       }
     }
   }
@@ -111,17 +156,23 @@ export class SeaWallet implements Wallet {
   #connect: StandardConnectMethod = async () => {
     // Your wallet's connect implementation
     try {
-      console.log(chrome.runtime.id)
+      // console.log(chrome.runtime.id)
       const response = await sendToBackground<ConnectRequest, ConnectResponse>({
         name: "connect",
         body: {
           site: window.location.origin,
-          icon: (document.querySelector('link[rel="icon"]') as HTMLLinkElement)?.href || 
-               (document.querySelector('link[rel="shortcut icon"]') as HTMLLinkElement)?.href || 
-               `${window.location.origin}/favicon.ico`
+          icon:
+            (document.querySelector('link[rel="icon"]') as HTMLLinkElement)
+              ?.href ||
+            (
+              document.querySelector(
+                'link[rel="shortcut icon"]'
+              ) as HTMLLinkElement
+            )?.href ||
+            `${window.location.origin}/favicon.ico`
         },
         // Replace this with your actual extension ID from chrome://extensions
-        extensionId: 'anaeleemhdicpgmclmdijcmadhmeipfp'
+        extensionId: "anaeleemhdicpgmclmdijcmadhmeipfp"
       })
       return { accounts: [] }
     } catch (error) {
@@ -147,6 +198,47 @@ export class SeaWallet implements Wallet {
 
   #reportTransactionEffects: SuiReportTransactionEffectsMethod = async () => {
     // Your wallet's reportTransactionEffects implementation
+    throw new Error("Not implemented")
+  }
+
+  #iotaSignPersonalMessage: IotaSignPersonalMessageMethod = async () => {
+    // Your wallet's iota signPersonalMessage implementation
+    throw new Error("Not implemented")
+  }
+
+  #iotaSignTransaction: IotaSignTransactionMethod = async () => {
+    // Your wallet's iota signTransaction implementation
+    throw new Error("Not implemented")
+  }
+
+  #iotaSignAndExecuteTransaction: IotaSignAndExecuteTransactionMethod =
+    async () => {
+      // Your wallet's iota signAndExecuteTransaction implementation
+      throw new Error("Not implemented")
+    }
+
+  #iotaReportTransactionEffects: IotaReportTransactionEffectsMethod =
+    async () => {
+      // Your wallet's iota reportTransactionEffects implementation
+      throw new Error("Not implemented")
+    }
+
+  #rialoSignAndSendAllTransactions: RialoSignAndSendAllTransactionsMethod =
+    async (inputs) => {
+      throw new Error("Not implemented")
+    }
+
+  #rialoSignAndSendTransaction: RialoSignAndSendTransactionMethod = async (
+    ...inputs
+  ) => {
+    throw new Error("Not implemented")
+  }
+
+  #rialoSignMessage: RialoSignMessageMethod = async (...inputs) => {
+    throw new Error("Not implemented")
+  }
+
+  #rialoSignTransaction: RialoSignTransactionMethod = async (...inputs) => {
     throw new Error("Not implemented")
   }
 }
